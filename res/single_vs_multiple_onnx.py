@@ -88,7 +88,7 @@ def prepare_initial_input_data(onnx_model_path, default_input_data):
     return initial_input_data
 
 # Define paths for single ONNX model and split subgraph models
-single_onnx_model_path = './net/unet_32_sim_v2.onnx'
+single_onnx_model_path = './test.onnx'
 model_path = './subgraphs/'
 subgraphsiostxt_path = './subgraphs_ios.txt'
 
