@@ -15,14 +15,13 @@ protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS ${PROTO_FILES})
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include)
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/Device)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}/include/json)
 
 find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 include_directories(${Python3_INCLUDE_DIRS})
 
 
-file(GLOB SOURCES "lib/*.cpp" "lib/Device/*.cpp" )
+file(GLOB SOURCES "lib/*.cpp" "lib/*.cpp" )
 
 add_library(onnx-subgraph-parser STATIC ${SOURCES} ${PROTO_SRCS} ${PROTO_FILES})
 target_link_libraries(onnx-subgraph-parser protobuf)
