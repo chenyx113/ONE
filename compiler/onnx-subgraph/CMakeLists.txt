@@ -21,26 +21,28 @@ find_package(Python3 COMPONENTS Interpreter Development REQUIRED)
 include_directories(${Python3_INCLUDE_DIRS})
 
 
-file(GLOB SOURCES "lib/*.cpp" "lib/*.cpp" )
+file(GLOB SOURCES "src/lib/*.cpp" "src/lib/*.cpp" )
 
 add_library(onnx-subgraph-parser STATIC ${SOURCES} ${PROTO_SRCS} ${PROTO_FILES})
 target_link_libraries(onnx-subgraph-parser protobuf)
 
 
-add_executable(onnx-subgraph main.cpp)
+add_executable(onnx-subgraph src/main.cpp)
 target_link_libraries(onnx-subgraph onnx-subgraph-parser ${Python3_LIBRARIES})
 
 
  set(ONNX_SUGRAPH_FILES                                                          
-   extract_onnx_lib.py
-	 extract_onnx.py
-	 single_vs_multiple_onnx.py
-	 quant.py
-	 model_inference.py
-	 model_inference_multiple_output.py
-	 onnx_subgraph_ut.py
-	 test.onnx
-	 config.json
+    extract_onnx_lib.py
+    extract_onnx.py
+    single_vs_multiple_onnx.py
+    quant.py
+    model_inference.py
+    model_inference_multiple_output.py
+    onnx_subgraph_ut.py
+    test_model_download.sh
+    config.json
+    config-sample-1.json
+    config-sample-2.json
  )                                                                            
                                                                               
  foreach(ONNX_SUGRAPH IN ITEMS ${ONNX_SUGRAPH_FILES})                               
