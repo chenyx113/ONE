@@ -1,5 +1,6 @@
 # onnx_autosubgraph
-onnx-subgraph tool provides  model auto partitionioning of onnx model to several sub models by operator, performance and model size limitations, with the order and input / output names of sub models
+onnx-subgraph tool provides  model auto partitionioning of onnx model to several sub models by operator, performance and model size limitations, 
+with the order and input / output names of sub models
 
 # How to build the onnx-subgraph
 ## OS environment dependence
@@ -36,9 +37,25 @@ onnx-subgraph tool provides  model auto partitionioning of onnx model to several
 # How to use the onnx-subgraph
 ## Pre-steps
 ### Download the test AI models
-    1. **bash scripts/test_model_download.sh**, then "resnet-test.onnx" will be got in ./build
-    2. you can change to any other onnx files as your needs, or edit the download link in "resnet-test.onnx"
-    
+    1. bash scripts/test_model_download.sh, then "resnet-test.onnx" will be got in ./build
+    2. you can change to any other onnx files as your needs, or edit the download link in "scripts/test_model_download.sh"
+### Prepare the config.json
+|  
+{
+    "NPU_supported_ops": ["Conv", "Reshape", "Transpose", "Add", "ReduceMean", "Sub", "Div", "Mul", "Sigmoid","MatMul"],
+    "CPU_supported_ops": ["Sub", "Pow", "ReduceMean", "Add", "Sqrt", "Div","Transpose", "Gather", "MatMul", "Mul", "Softmax", "Erf", "Gemm", "Conv", "Reshape",
+    "Sin", "Where", "ConstantOfShape", "Cast", "Sigmoid", "Cos", "Expand", "Slice", "Unsqueeze"],
+    "performance_data": [
+        {"name":"Conv","CPU_time": 0.1, "NPU_time": 0.05},
+        {"name":"Mul", "CPU_time": 0.15, "NPU_time": 0.07}
+    ],
+    "hardware_limits": {
+        "max_subgraph_size": 60024.0,
+        "max_subgraphs": 5
+    }
+ }
+ |
+  
 ### Parse the onnx model
     1. edit the config.json as your needs
        -> NPU_supported_ops mean operators that can be supported by NPU
