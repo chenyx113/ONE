@@ -49,7 +49,7 @@ target_link_libraries(onnx-subgraph onnx-subgraph-parser ${Python3_LIBRARIES})
                                                                               
    set(ONNX_SUGRAPH_FILE ${ONNX_SUGRAPH})                                           
    set(ONNX_SUGRAPH_SRC "${CMAKE_CURRENT_SOURCE_DIR}/${ONNX_SUGRAPH_FILE}")         
-   set(ONNX_SUGRAPH_BIN "${CMAKE_CURRENT_BINARY_DIR}/${ONNX_SUGRAPH_FILE}")         
+   set(ONNX_SUGRAPH_BIN "${CMAKE_CURRENT_BINARY_DIR}/scripts/${ONNX_SUGRAPH_FILE}")         
    set(ONNX_SUGRAPH_TARGET "${ONNX_SUGRAPH}_target")                                
                                                                               
    add_custom_command(OUTPUT ${ONNX_SUGRAPH_BIN}                                 
