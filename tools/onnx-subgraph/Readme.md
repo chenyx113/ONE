@@ -19,8 +19,20 @@ onnx-subgraph tool provides  model auto partitionioning of onnx model to several
     1. cd onnx-subgraph
     2. mkdir build & cd build
     3. cmake .. & make
-    4. onnx-subgraph and related resources will be generated at ./build
-
+    4. we can get following output at ./build
+          ├── onnx-subgraph
+          └── scripts
+              ├── config.json
+              ├── config-sample-1.json
+              ├── config-sample-2.json
+              ├── extract_onnx_lib.py
+              ├── extract_onnx.py
+              ├── model_inference_multiple_output.py
+              ├── model_inference.py
+              ├── onnx_subgraph_ut.py
+              ├── quant.py
+              ├── single_vs_multiple_onnx.py
+              └── test_model_download.sh
 # How to use the onnx-subgraph
 ### Pre-steps
     1. prepare the target onnx AI model, we use test.onnx for example
