@@ -40,7 +40,10 @@ with the order and input / output names of sub models
     1. bash scripts/test_model_download.sh, then "resnet-test.onnx" will be got in ./build
     2. you can change to any other onnx files as your needs, or edit the download link in "scripts/test_model_download.sh"
 ### Prepare the config.json
-|  
+    1. you can edit operators in "NPU_supported_ops" and "CPU_supported_ops";
+    2. you can edit performance data in "performance_data" as the real HW status, 
+    3. you can edit "max_subgraph_size" in case of "NPU_supported_ops" is []
+    4. you can also check more examples in "config-sample-1.json" and "config-sample-2.json"
 {
     "NPU_supported_ops": ["Conv", "Reshape", "Transpose", "Add", "ReduceMean", "Sub", "Div", "Mul", "Sigmoid","MatMul"],
     "CPU_supported_ops": ["Sub", "Pow", "ReduceMean", "Add", "Sqrt", "Div","Transpose", "Gather", "MatMul", "Mul", "Softmax", "Erf", "Gemm", "Conv", "Reshape",
@@ -54,19 +57,12 @@ with the order and input / output names of sub models
         "max_subgraphs": 5
     }
  }
- |
   
-### Parse the onnx model
-    1. edit the config.json as your needs
-       -> NPU_supported_ops mean operators that can be supported by NPU
-       -> CPU_supported_ops mean operators that can be supported by CPU
-       -> In case of operators supported by both CPU and NPU, we can describ the performance data at "performance_data"
-       -> "max_subgraph_size": can set the max size of subgraph, it works only if NPU_supported_ops is NULL
-
-    2. ./onnx-subgraph --onnx=test.onnx
-       after parse done, subgraphs_ios.txt will be generated
+## Parse the onnx model
+     ./onnx-subgraph --onnx=resnet-test.onnx
+       after parsing done, subgraphs_ios.txt will be generated at current path
        
- ### Split the onnx model to subgraphs
+## Split the onnx model to subgraphs
     1. edit the config path and model file path at extract_onnx.py 
 
     2. python extract_onnx.py, after extraction done, the subgraphs will be saved at './subgraphs'
