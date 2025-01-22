@@ -1,28 +1,30 @@
-## onnx_autosubgraphs
-in this project, we can support onnx AI model auto subgraph, the AI model can be  splitted by model size, operators etc, it help much for on-device AI acceleration, and has been verified on Rose-P NPU and Qualcomm DSP.
+# onnx_autosubgraph
+onnx-subgraph tool provides  model auto partitionioning of onnx model to several sub models by operator, performance and model size limitations, with the order and input / output names of sub models
 
-### OS environment
+# How to build the onnx-subgraph
+## OS environment dependence
      1. ubuntu >=20.04
      2. GCC >= 9.4.0
      3. cmake >= 3.10
      4. python >= 3.8
      5. apt-get install libprotobuf-dev protobuf-compiler
 
-### Python packages
+## Python packages dependence
     onnx                         1.16.0
     onnxruntime                  1.18.1
     onnxsim                      0.4.36
     torch                        2.3.1
-
-### Pre-steps
-    1. prepare the target onnx AI model, we use test.onnx for example
-    2. use onnxsim to remove the complex structures before excution onnx-subgraph
     
-### building the onnx-subgraph
+## building the onnx-subgraph
     1. cd onnx-subgraph
     2. mkdir build & cd build
     3. cmake .. & make
-    4. onnx-subgraph will be generated at ./build
+    4. onnx-subgraph and related resources will be generated at ./build
+
+# How to use the onnx-subgraph
+### Pre-steps
+    1. prepare the target onnx AI model, we use test.onnx for example
+    2. use onnxsim to remove the complex structures before excution onnx-subgraph
     
 ### Parse the onnx model
     1. edit the config.json as your needs
