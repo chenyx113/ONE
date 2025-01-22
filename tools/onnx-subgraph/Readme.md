@@ -36,7 +36,7 @@ onnx-subgraph tool provides  model auto partitionioning of onnx model to several
 # How to use the onnx-subgraph
 ## Pre-steps
 ### Download the test AI models
-    1. **bash scripts/test_model_download.sh**, then "resnet-test.onnx" will be got in ./build
+    1. ** bash scripts/test_model_download.sh **, then "resnet-test.onnx" will be got in ./build
     2. you can change to any other onnx files as your needs, or edit the download link in "resnet-test.onnx"
     
 ### Parse the onnx model
