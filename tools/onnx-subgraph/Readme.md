@@ -40,23 +40,12 @@ with the order and input / output names of sub models
     1. bash scripts/test_model_download.sh, then "resnet-test.onnx" will be got in ./build
     2. you can change to any other onnx files as your needs, or edit the download link in "scripts/test_model_download.sh"
 ### Prepare the config.json
-    1. you can edit operators in "NPU_supported_ops" and "CPU_supported_ops";
-    2. you can edit performance data in "performance_data" as the real HW status, 
-    3. you can edit "max_subgraph_size" in case of "NPU_supported_ops" is []
-    4. you can also check more examples in "config-sample-1.json" and "config-sample-2.json"
-{
-    "NPU_supported_ops": ["Conv", "Reshape", "Transpose", "Add", "ReduceMean", "Sub", "Div", "Mul", "Sigmoid","MatMul"],
-    "CPU_supported_ops": ["Sub", "Pow", "ReduceMean", "Add", "Sqrt", "Div","Transpose", "Gather", "MatMul", "Mul", "Softmax", "Erf", "Gemm", "Conv", "Reshape",
-    "Sin", "Where", "ConstantOfShape", "Cast", "Sigmoid", "Cos", "Expand", "Slice", "Unsqueeze"],
-    "performance_data": [
-        {"name":"Conv","CPU_time": 0.1, "NPU_time": 0.05},
-        {"name":"Mul", "CPU_time": 0.15, "NPU_time": 0.07}
-    ],
-    "hardware_limits": {
-        "max_subgraph_size": 60024.0,
-        "max_subgraphs": 5
-    }
- }
+    1. edit the config.json
+       . you can edit operators in "NPU_supported_ops" and "CPU_supported_ops";
+       . you can edit performance data in "performance_data" as the real HW status, 
+       . you can edit "max_subgraph_size" in case of "NPU_supported_ops" is []
+    2. you can also check more examples in "config-sample-1.json" and "config-sample-2.json"
+
   
 ## Parse the onnx model
      ./onnx-subgraph --onnx=resnet-test.onnx
