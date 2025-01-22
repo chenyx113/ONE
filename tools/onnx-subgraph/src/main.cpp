@@ -35,7 +35,7 @@ int main(int argc, char* argv[]) {
             return -1;
         }
     } else {
-        printf("Please set valide args: ./CoComputingCompiler --onnx=xxx.onnx\n");
+        printf("Please set valide args: ./onnx-subgraph --onnx=xxx.onnx\n");
         return -1;
     }
 
@@ -46,7 +46,7 @@ int main(int argc, char* argv[]) {
     Partition p;
     Device target;
     target.updateOnnxFile(onnxFile);
-    target.GetDeviceJson("config.json");
+    target.GetDeviceJson("./scripts/config.json");
     p.PartitionGraph(g, target, PartitionStrategy::SPILTE_NPU_STRUCTURE_FIRST, node_io_size);
 
     Py_Initialize();
