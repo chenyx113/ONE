@@ -52,9 +52,16 @@ with the order and input / output names of sub models
        after parsing done, subgraphs_ios.txt will be generated at current path
        
 ## Split the onnx model to subgraphs
-    1. edit the config path and model file path at extract_onnx.py 
-
-    2. python extract_onnx.py, after extraction done, the subgraphs will be saved at './subgraphs'
+    1. edit the config path and model file path at ./scripts/extract_onnx.py 
+       e.g.: extract_onnx_lib.split_onnx_ios('./subgraphs_ios.txt','./resnet-test.onnx') 
+    2. python scripts/extract_onnx.py, after extraction done, the subgraphs will be saved at './subgraphs'
+       subgraphs
+       ├── CPU
+       │   ├── CPUsubgraph0.onnx
+       │   └── CPUsubgraph1.onnx
+       └── NPU
+           ├── NPUsubgraph0.onnx
+           └── NPUsubgraph1.onnx
     
 ### Verify the subgraphs inference with original model file
     1. edit the model path, subgraph path and config path in single_vs_multiple_onnx.py
