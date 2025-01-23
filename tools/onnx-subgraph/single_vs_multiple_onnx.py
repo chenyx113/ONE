@@ -76,7 +76,7 @@ def prepare_initial_input_data(onnx_model_path, default_input_data):
     return initial_input_data
 
 # Define paths for single ONNX model and split subgraph models
-single_onnx_model_path = './test.onnx'
+single_onnx_model_path = './resnet-test.onnx'
 model_path = './subgraphs/'
 subgraphsiostxt_path = './subgraphs_ios.txt'
 
@@ -85,9 +85,7 @@ model_inference = ModelInference(model_path, subgraphsiostxt_path)
 
 # Default input data dictionary
 default_input_data = {
-    "sample": np.random.rand(1, 4, 32, 32).astype(np.float32),
-    "timestep": np.random.rand(1).astype(np.float32),
-    "encoder_hidden_states": np.random.rand(1, 77, 768).astype(np.float32),
+    "x": np.random.rand(1, 3, 256, 256).astype(np.float32),
 }
 
 #initial_input_data = prepare_initial_input_data(single_onnx_model_path, default_input_data)
