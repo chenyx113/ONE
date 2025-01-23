@@ -16,7 +16,9 @@
 #include "device.h"
 
 void Device::GenerateCutInstruction(std::vector<onnx::GraphProto> &Subgraphs, std::string device,
-                                      std::vector<std::unordered_set<NodeTensor>> &subgraphs_inputs, std::vector<std::unordered_set<NodeTensor>> &subgraphs_outputs) {
+                                      std::vector<std::unordered_set<NodeTensor>> &subgraphs_inputs,
+                                      std::vector<std::unordered_set<NodeTensor>> &subgraphs_outputs) 
+{
     std::cout << "Generate Cut Instruction for Target_NPU" << std::endl;
     // open file
     std::string file_name = device + "CutInstruction.txt";
@@ -29,12 +31,6 @@ void Device::GenerateCutInstruction(std::vector<onnx::GraphProto> &Subgraphs, st
         // default parameters
         std::string modelFile = onnxFile;
         std::string dataScaleDiv = "255";
-        std::string board;
-        if (device == "npu") {
-            board = "th1520";
-        } else {
-            board = "c920";
-        }
         std::string postprocess = "save_and_top5";
 
         std::unordered_set<NodeTensor> graphInputs = subgraphs_inputs[i];
@@ -79,21 +75,8 @@ void Device::GenerateCutInstruction(std::vector<onnx::GraphProto> &Subgraphs, st
         std::string calibrateDataset = device + "_Subgraphs_" + std::to_string(i) + ".npz";
         std::string quantizationScheme = "int8_asym";
 
-        // write to file
-        outFile << "hhb -C";
-        outFile << " --model-file " << modelFile;
-        outFile << " --data-scale-div " << dataScaleDiv;
-        outFile << " --board " << board;
-        outFile << " --postprocess " << postprocess;
-        outFile << " --input-name " << inputName;
-        outFile << " --output-name " << outputName;
-        outFile << " --input-shape " << inputShape;
-        outFile << " --calibrate-dataset " << calibrateDataset;
-        outFile << " --quantization-scheme " << quantizationScheme;
-        outFile << std::endl;
     }
 
     outFile.close();
 
-    std::cout << "Configurations written to config.txt successfully." << std::endl;
 }
