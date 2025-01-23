@@ -15,6 +15,10 @@ with the order and input / output names of sub models
     onnxruntime                  1.18.1
     onnxsim                      0.4.36
     torch                        2.3.1
+    scikit-image
+    scikit-learn
+    pandas
+    tqdm
     
 ## building the onnx-subgraph
     1. cd onnx-subgraph
@@ -64,9 +68,18 @@ with the order and input / output names of sub models
            └── NPUsubgraph1.onnx
     
 ### Verify the subgraphs inference with original model file
-    1. edit the model path, subgraph path and config path in single_vs_multiple_onnx.py
-
-    2. edit the input shape and name of onnx model in single_vs_multiple_onnx.py
-
+    1. edit the model path, subgraph path and config path in ./scripts/single_vs_multiple_onnx.py
+             single_onnx_model_path = './resnet-test.onnx'
+             model_path = './subgraphs/'
+             subgraphsiostxt_path = './subgraphs_ios.txt'
+    2. edit the input shape and name of onnx model in ./scripts/single_vs_multiple_onnx.py
+             default_input_data = {
+                 "x": np.random.rand(1, 3, 256, 256).astype(np.float32),
+             }
     3. compare the MSE of original inference result and subgraphs inference result
-       python single_vs_multiple_onnx.py
+       python ./scripts/single_vs_multiple_onnx.py
+       output:
+            Single model inference completed!
+            Multiple subgraph inference completed!
+            Comparing inference results between single ONNX model and multiple subgraphs...
+            Output '316' MSE: 5.125894080395578e-14
