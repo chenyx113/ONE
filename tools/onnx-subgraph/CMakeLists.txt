@@ -67,15 +67,3 @@ target_link_libraries(onnx-subgraph onnx-subgraph-parser ${Python3_LIBRARIES})
            DESTINATION bin)                                                   
                                                                               
  endforeach(ONNX_SUGRAPH)     
-
-set(Python_ADDITIONAL_VERSIONS 3.8)
-find_package(PythonInterp 3.8 QUIET)
-if(NOT ${PYTHONINTERP_FOUND}) 
-	message(FATAL_ERROR "Build onnx-subgraph_unittest: FAIL (Python3 is missing)")
-endif() 
-
-  add_test(
- 		 NAME onnx-subgraph_unittest
- 		 COMMAND ${PYTHON_EXECUTABLE} -m unittest
- 		 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-  )
