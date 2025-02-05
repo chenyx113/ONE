@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Samsung Electronics Co., Ltd. All Rights Reserved
+# Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,6 @@ import extract_onnx_lib
 import torch
 import onnx
 import re
-print("python executed")
-extract_onnx_lib.split_onnx_ios('./subgraphs_ios.txt','./resnet-test.onnx')
 
+print("python executed")
+extract_onnx_lib.split_onnx_ios('./subgraphs_ios.txt', './resnet-test.onnx')
