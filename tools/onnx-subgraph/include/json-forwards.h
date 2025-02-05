@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
+ */
+ 
 /// Json-cpp amalgated forward header (http://jsoncpp.sourceforge.net/).
 /// It is intended to be used with #include "json/json-forwards.h"
 /// This header provides forward declaration for all JsonCpp types.
@@ -7,28 +11,28 @@
 // //////////////////////////////////////////////////////////////////////
 
 /*
-The JsonCpp library's source code, including accompanying documentation, 
+The JsonCpp library's source code, including accompanying documentation,
 tests and demonstration applications, are licensed under the following
 conditions...
 
-The author (Baptiste Lepilleur) explicitly disclaims copyright in all 
-jurisdictions which recognize such a disclaimer. In such jurisdictions, 
+The author (Baptiste Lepilleur) explicitly disclaims copyright in all
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
 this software is released into the Public Domain.
 
 In jurisdictions which do not recognize Public Domain property (e.g. Germany as of
 2010), this software is Copyright (c) 2007-2010 by Baptiste Lepilleur, and is
 released under the terms of the MIT License (see below).
 
-In jurisdictions which recognize Public Domain property, the user of this 
-software may choose to accept it either as 1) Public Domain, 2) under the 
-conditions of the MIT License (see below), or 3) under the terms of dual 
+In jurisdictions which recognize Public Domain property, the user of this
+software may choose to accept it either as 1) Public Domain, 2) under the
+conditions of the MIT License (see below), or 3) under the terms of dual
 Public Domain/MIT License conditions described here, as they choose.
 
 The MIT License is about as close to Public Domain as a license can get, and is
 described in clear, concise terms at:
 
    http://en.wikipedia.org/wiki/MIT_License
-   
+
 The full text of the MIT License follows:
 
 ========================================================================
@@ -69,12 +73,8 @@ license you like.
 // End of content of file: LICENSE
 // //////////////////////////////////////////////////////////////////////
 
-
-
-
-
 #ifndef JSON_FORWARD_AMALGATED_H_INCLUDED
-# define JSON_FORWARD_AMALGATED_H_INCLUDED
+#define JSON_FORWARD_AMALGATED_H_INCLUDED
 /// If defined, indicates that the source file is amalgated
 /// to prevent private header inclusion.
 #define JSON_IS_AMALGAMATION
@@ -92,14 +92,14 @@ license you like.
 #define JSON_CONFIG_H_INCLUDED
 
 /// If defined, indicates that json library is embedded in CppTL library.
-//# define JSON_IN_CPPTL 1
+// # define JSON_IN_CPPTL 1
 
 /// If defined, indicates that json may leverage CppTL library
-//#  define JSON_USE_CPPTL 1
+// #  define JSON_USE_CPPTL 1
 /// If defined, indicates that cpptl vector based map should be used instead of
 /// std::map
 /// as Value container.
-//#  define JSON_USE_CPPTL_SMALLMAP 1
+// #  define JSON_USE_CPPTL_SMALLMAP 1
 
 // If non-zero, the library uses exceptions to report bad input instead of C
 // assertion macros. The default is to use exceptions.
@@ -167,19 +167,20 @@ license you like.
 #define JSONCPP_DEPRECATED(message) __declspec(deprecated(message))
 #elif defined(__clang__) && defined(__has_feature)
 #if __has_feature(attribute_deprecated_with_message)
-#define JSONCPP_DEPRECATED(message)  __attribute__ ((deprecated(message)))
+#define JSONCPP_DEPRECATED(message) __attribute__((deprecated(message)))
 #endif
-#elif defined(__GNUC__) &&  (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
-#define JSONCPP_DEPRECATED(message)  __attribute__ ((deprecated(message)))
-#elif defined(__GNUC__) &&  (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
-#define JSONCPP_DEPRECATED(message)  __attribute__((__deprecated__))
+#elif defined(__GNUC__) && (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
+#define JSONCPP_DEPRECATED(message) __attribute__((deprecated(message)))
+#elif defined(__GNUC__) && (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
+#define JSONCPP_DEPRECATED(message) __attribute__((__deprecated__))
 #endif
 
 #if !defined(JSONCPP_DEPRECATED)
 #define JSONCPP_DEPRECATED(message)
 #endif // if !defined(JSONCPP_DEPRECATED)
 
-namespace Json {
+namespace Json
+{
 typedef int Int;
 typedef unsigned int UInt;
 #if defined(JSON_NO_INT64)
@@ -194,7 +195,7 @@ typedef unsigned __int64 UInt64;
 #else                 // if defined(_MSC_VER) // Other platforms, use long long
 typedef long long int Int64;
 typedef unsigned long long int UInt64;
-#endif // if defined(_MSC_VER)
+#endif                // if defined(_MSC_VER)
 typedef Int64 LargestInt;
 typedef UInt64 LargestUInt;
 #define JSON_HAS_INT64
@@ -206,11 +207,6 @@ typedef UInt64 LargestUInt;
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: include/json/config.h
 // //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // //////////////////////////////////////////////////////////////////////
 // Beginning of content of file: include/json/forwards.h
@@ -228,7 +224,8 @@ typedef UInt64 LargestUInt;
 #include "config.h"
 #endif // if !defined(JSON_IS_AMALGAMATION)
 
-namespace Json {
+namespace Json
+{
 
 // writer.h
 class FastWriter;
@@ -258,8 +255,4 @@ class ValueConstIterator;
 // End of content of file: include/json/forwards.h
 // //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-#endif //ifndef JSON_FORWARD_AMALGATED_H_INCLUDED
+#endif // ifndef JSON_FORWARD_AMALGATED_H_INCLUDED
