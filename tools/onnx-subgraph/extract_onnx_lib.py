@@ -79,7 +79,7 @@ def split_onnx_ios(instrfile,
         else:
             count = npu_count
             npu_count = npu_count + 1
-        output_path_folder = out_folder + type + '/'
+        output_path_folder = out_folder
         if not os.path.exists(output_path_folder):
             os.makedirs(output_path_folder)
         output_path = output_path_folder + type + 'subgraph' + str(count) + '.onnx'
