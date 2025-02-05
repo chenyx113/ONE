@@ -1,7 +1,7 @@
 /*
  * Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
  */
- 
+
 /// Json-cpp amalgated forward header (http://jsoncpp.sourceforge.net/).
 /// It is intended to be used with #include "json/json-forwards.h"
 /// This header provides forward declaration for all JsonCpp types.
