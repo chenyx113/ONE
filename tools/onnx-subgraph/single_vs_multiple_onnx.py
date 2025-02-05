@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Samsung Electronics Co., Ltd. All Rights Reserved
+# Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -12,10 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import onnxruntime as ort  
-import numpy as np        
-from model_inference_multiple_output import * 
-import os 
+import onnxruntime as ort
+import numpy as np
+from model_inference_multiple_output import *
+import os
+
 
 def compare_results(output_single, output_multiple):
     """
@@ -27,10 +28,11 @@ def compare_results(output_single, output_multiple):
         if key in output_single and key in output_multiple:
             single_output = np.array(output_single[key])
             multiple_output = np.array(output_multiple[key])
-            mse = np.mean((single_output - multiple_output) ** 2)
+            mse = np.mean((single_output - multiple_output)**2)
             print(f"Output '{key}' MSE: {mse}")
         else:
             print(f"Output '{key}' is missing in one of the result sets.")
+
 
 def prepare_initial_input_data(onnx_model_path, default_input_data):
     """
@@ -50,8 +52,12 @@ def prepare_initial_input_data(onnx_model_path, default_input_data):
     dtype_map = {'f': np.float32, 'i': np.int64}
 
     for input_name, shape in input_info.items():
-        custom_shape_str = input(f"Enter new shape for input '{input_name}' (comma-separated integers), or press Enter to use default: ")
-        custom_dtype_str = input(f"Enter data type for input '{input_name}' ('f' for float32, 'i' for int64), or press Enter to use default: ")
+        custom_shape_str = input(
+            f"Enter new shape for input '{input_name}' (comma-separated integers), or press Enter to use default: "
+        )
+        custom_dtype_str = input(
+            f"Enter data type for input '{input_name}' ('f' for float32, 'i' for int64), or press Enter to use default: "
+        )
 
         if not custom_shape_str:
             new_shape = default_input_data[input_name].shape
@@ -75,6 +81,7 @@ def prepare_initial_input_data(onnx_model_path, default_input_data):
 
     return initial_input_data
 
+
 # Define paths for single ONNX model and split subgraph models
 single_onnx_model_path = './resnet-test.onnx'
 model_path = './subgraphs/'
@@ -92,7 +99,8 @@ default_input_data = {
 initial_input_data = default_input_data
 
 # Perform inference using a single ONNX model
-output_single = ModelInference.infer_single_onnx_model(single_onnx_model_path, initial_input_data)
+output_single = ModelInference.infer_single_onnx_model(single_onnx_model_path,
+                                                       initial_input_data)
 print("Single model inference completed!")
 
 # Retrieve all output names from the single model
