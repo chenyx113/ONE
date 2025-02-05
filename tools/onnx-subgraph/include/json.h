@@ -1,8 +1,6 @@
 /*
  * Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
  */
-
-
 /// Json-cpp amalgated header (http://jsoncpp.sourceforge.net/).
 /// It is intended to be used with #include "json/json.h"
 
