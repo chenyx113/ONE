@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2024  Samsung Electronics Co., Ltd. All Rights Reserved
+ * Copyright (c) 2025 Samsung Electronics Co., Ltd. All Rights Reserved
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,43 +20,50 @@
 #include "partition.h"
 #include "Python.h"
 
-int main(int argc, char* argv[]) {
-    std::string onnxFile;
-    if (argc > 1) {
-        for (int i = 1; i < argc; ++i) {
-            std::string arg = argv[i];
-            if (arg.substr(0, 7) == "--onnx=") {
-                onnxFile = arg.substr(7);
-                std::cout << "ONNX file: " << onnxFile << std::endl;
-            } 
-        }
-        if (onnxFile.empty()) {
-            std::cout << "No ONNX file provided." << std::endl;
-            return -1;
-        }
-    } else {
-        printf("Please set valide args: ./onnx-subgraph --onnx=xxx.onnx\n");
-        return -1;
+int main(int argc, char *argv[])
+{
+  std::string onnxFile;
+  if (argc > 1)
+  {
+    for (int i = 1; i < argc; ++i)
+    {
+      std::string arg = argv[i];
+      if (arg.substr(0, 7) == "--onnx=")
+      {
+        onnxFile = arg.substr(7);
+        std::cout << "ONNX file: " << onnxFile << std::endl;
+      }
     }
+    if (onnxFile.empty())
+    {
+      std::cout << "No ONNX file provided." << std::endl;
+      return -1;
+    }
+  }
+  else
+  {
+    printf("Please set valide args: ./onnx-subgraph --onnx=xxx.onnx\n");
+    return -1;
+  }
 
+  Graph graph;
+  auto g = graph.GetGraphFromOnnx(onnxFile);
+  std::unordered_map<std::string, NodeIOSize> node_io_size;
+  Partition p;
+  Device target;
+  target.updateOnnxFile(onnxFile);
+  target.GetDeviceJson("./scripts/config.json");
+  p.PartitionGraph(g, target, PartitionStrategy::SPILTE_NPU_STRUCTURE_FIRST, node_io_size);
 
-    Graph graph;
-    auto g = graph.GetGraphFromOnnx(onnxFile);
-    std::unordered_map<std::string, NodeIOSize> node_io_size;
-    Partition p;
-    Device target;
-    target.updateOnnxFile(onnxFile);
-    target.GetDeviceJson("./scripts/config.json");
-    p.PartitionGraph(g, target, PartitionStrategy::SPILTE_NPU_STRUCTURE_FIRST, node_io_size);
-
-    Py_Initialize();
-    if (!Py_IsInitialized()) {
-		std::cout << "python init fail" << std::endl;
-		return 0;
-	}
-    PyRun_SimpleString("import sys");
-    PyRun_SimpleString("sys.path.append('.')");
-    Py_Finalize();
-
+  Py_Initialize();
+  if (!Py_IsInitialized())
+  {
+    std::cout << "python init fail" << std::endl;
     return 0;
+  }
+  PyRun_SimpleString("import sys");
+  PyRun_SimpleString("sys.path.append('.')");
+  Py_Finalize();
+
+  return 0;
 }
