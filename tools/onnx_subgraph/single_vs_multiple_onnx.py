@@ -61,13 +61,8 @@ if __name__ == "__main__":
                             help="set subgraphs node i/o information")
     args = arg_parser.parse_args()
 
-    # Define paths for single ONNX model and split subgraph models
-    single_onnx_model_path = args.single
-    multi_model_path = args.multi
-    subgraphsiostxt_path = args.node
-
     # Initialize ModelInference instance for inference
-    model_inference = ModelInference(multi_model_path, subgraphsiostxt_path)
+    model_inference = ModelInference(args.multi, args.node)
 
     # Default input data dictionary
     default_input_data = {
@@ -75,6 +70,5 @@ if __name__ == "__main__":
     }
 
     # Perform inference using a single ONNX model
-    output_single = ModelInference.infer_single_onnx_model(single_onnx_model_path,
-                                                           default_input_data)
+    output_single = ModelInference.infer_single_onnx_model(args.single, default_input_data)
     print("Single model inference completed!")
