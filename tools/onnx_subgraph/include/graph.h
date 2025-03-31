@@ -18,10 +18,13 @@
 #define GRAPH_H
 
 #include "onnx.pb.h"
+
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
 #include <functional>
+#include <string>
+
 // save the size of each node's inputs and outputs
 struct NodeIOSize
 {
@@ -49,27 +52,24 @@ struct NodeTensor
 
 namespace std
 {
-template <> struct hash<NodeTensor>
-{
-  size_t operator()(const NodeTensor &tensor) const
+
+  template <> struct hash<NodeTensor>
   {
-    size_t hashValue = hash<string>()(tensor.name);
-    for (auto &val : tensor.shape)
+    size_t operator()(const NodeTensor &tensor) const
     {
-      hashValue ^= hash<int64_t>()(val) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+      size_t hashValue = hash<string>()(tensor.name);
+      for (auto &val : tensor.shape)
+      {
+        hashValue ^= hash<int64_t>()(val) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
+      }
+      return hashValue;
     }
-    return hashValue;
-  }
-};
+  };
+
 } // namespace std
 
 class Graph
 {
-private:
-  /* data */
-public:
-  Graph() {}
-  ~Graph() {}
   /**
    * @brief     Loads an ONNX model from a file and returns the graph contained within.
    *
@@ -89,4 +89,5 @@ struct graph_adjacency_node
   std::string name;
   int index;
 };
+
 #endif
