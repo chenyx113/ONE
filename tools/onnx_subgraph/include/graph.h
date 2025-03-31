@@ -53,18 +53,18 @@ struct NodeTensor
 namespace std
 {
 
-  template <> struct hash<NodeTensor>
+template <> struct hash<NodeTensor>
+{
+  size_t operator()(const NodeTensor &tensor) const
   {
-    size_t operator()(const NodeTensor &tensor) const
+    size_t hashValue = hash<string>()(tensor.name);
+    for (auto &val : tensor.shape)
     {
-      size_t hashValue = hash<string>()(tensor.name);
-      for (auto &val : tensor.shape)
-      {
-        hashValue ^= hash<int64_t>()(val) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
-      }
-      return hashValue;
+      hashValue ^= hash<int64_t>()(val) + 0x9e3779b9 + (hashValue << 6) + (hashValue >> 2);
     }
-  };
+    return hashValue;
+  }
+};
 
 } // namespace std
 
