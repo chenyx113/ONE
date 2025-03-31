@@ -23,7 +23,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <functional>
-#include <string>
+#include <filesystem>
 
 // save the size of each node's inputs and outputs
 struct NodeIOSize
@@ -70,6 +70,7 @@ namespace std
 
 class Graph
 {
+public:
   /**
    * @brief     Loads an ONNX model from a file and returns the graph contained within.
    *
