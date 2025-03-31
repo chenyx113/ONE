@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 {
   std::string onnxFile;
   std::string confFile;
-  
+
   if (argc == 3)
   {
     std::string arg1 = argv[1];
