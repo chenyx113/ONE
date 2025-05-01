@@ -18,7 +18,9 @@
 #include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
+
 #define MAX_DEPTH 1000
+
 /**
  * Prints the subgraph information of an ONNX model to specified files.
  *
@@ -27,16 +29,18 @@
  * @param otherSubgraphs A vector containing other subgraph information.
  * @param other_subgraph_file_name The filename for the output of other subgraph information.
  */
-void print_subgraphs(std::vector<onnx::GraphProto> Subgraphs, char *subgraph_file_name,
-                     std::vector<onnx::GraphProto> otherSubgraphs, char *other_subgraph_file_name)
+void PrintSubgraphs(std::vector<onnx::GraphProto> Subgraphs, char *SubgraphFileName,
+                     std::vector<onnx::GraphProto> OtherSubgraphs, char *OtherSubgraphFileName)
 {
-  int node_sum = 0;
-  std::ofstream outFile(subgraph_file_name);
+  int nodeSum = 0;
+
+  std::ofstream outFile(SubgraphFileName);
   if (!outFile.is_open())
   {
     std::cerr << "Error opening file." << std::endl;
-    exit(0);
+    exit(-1);
   }
+
   int id = 0;
   for (const auto &vec : Subgraphs)
   {
@@ -45,60 +49,67 @@ void print_subgraphs(std::vector<onnx::GraphProto> Subgraphs, char *subgraph_fil
     {
       outFile << node.name() << " ";
     }
+
     id++;
     outFile << std::endl;
-    node_sum += vec.node_size();
+    nodeSum += vec.node_size();
   }
-  std::ofstream outFile_2(other_subgraph_file_name);
-  if (!outFile_2.is_open())
+
+  std::ofstream outFileOther(OtherSubgraphFileName);
+  if (!outFileOther.is_open())
   {
     std::cerr << "Error opening file." << std::endl;
-    exit(0);
+    exit(-1);
   }
+
   std::cout << "before:" << std::endl;
-  for (const auto &vec : otherSubgraphs)
+  for (const auto &vec : OtherSubgraphs)
   {
-    outFile_2 << " subgraph" << id << ":";
+    outFileOther << " subgraph" << id << ":";
     for (const auto &node : vec.node())
     {
-      outFile_2 << node.name() << " ";
+      outFileOther << node.name() << " ";
     }
+
     id++;
-    outFile_2 << std::endl;
-    node_sum += vec.node_size();
+    outFileOther << std::endl;
+    nodeSum += vec.node_size();
   }
 }
-///////
+
 /**
  * @brief     Constructs an adjacency list representation of the ONNX graph.
  *
  * @param     [in] g A const reference to an ONNX GraphProto object that contains the graph
- * structure.
+ *            structure.
  * @param     [in,out] visited A pointer to an integer array used to mark whether nodes have been
- * visited.
+ *             visited.
  * @pre       The 'visited' array should be pre-allocated with a size at least equal to the number
- * of nodes in the graph.
+ *            of nodes in the graph.
  * @post      The 'visited' array will be initialized to 0 for all nodes.
  * @exception None
  * @return    A vector of GraphAdjacencyNode objects representing the adjacency list of the graph.
  */
-std::vector<GraphAdjacencyNode> get_adjancency_list(const onnx::GraphProto &g, int *visited)
+std::vector<GraphAdjacencyNode> GetAdjancencyList(const onnx::GraphProto &g, int *visited)
 {
-  std::vector<GraphAdjacencyNode> adjacency_list;
-  int node_index = 0;
+  std::vector<GraphAdjacencyNode> AdjacencyList;
+  int NodeIndex = 0;
   for (const auto &node : g.node())
   {
-    visited[node_index] = 0;
-    GraphAdjacencyNode ad_node;
-    ad_node.index = node_index;
-    ad_node.name = node.name();
+    visited[NodeIndex] = 0;
+    GraphAdjacencyNode AdNode;
+    AdNode.index = NodeIndex;
+    AdNode.name = node.name();
     const auto &outputs = node.output();
+
     for (const auto &output : outputs)
     {
       int outputNodeIndex = 0;
+
       for (const auto &output_node : g.node())
       {
         int find_flag = 0;
+    
         const auto &inputs = output_node.input();
         for (const auto &input : inputs)
         {
@@ -108,22 +119,27 @@ std::vector<GraphAdjacencyNode> get_adjancency_list(const onnx::GraphProto &g, i
             break;
           }
         }
+
         if (find_flag == 1)
         {
-          if (std::find(ad_node.outputNodeIndex.begin(), ad_node.outputNodeIndex.end(),
-                        outputNodeIndex) == ad_node.outputNodeIndex.end())
+          if (std::find(AdNode.outputNodeIndex.begin(), AdNode.outputNodeIndex.end(),
+                        outputNodeIndex) == AdNode.outputNodeIndex.end())
           {
-            ad_node.outputNodeIndex.push_back(outputNodeIndex);
+            AdNode.outputNodeIndex.push_back(outputNodeIndex);
           }
         }
+
         outputNodeIndex++;
       }
     }
-    node_index++;
-    adjacency_list.push_back(ad_node);
+
+    NodeIndex++;
+    AdjacencyList.push_back(AdNode);
   }
-  return adjacency_list;
+
+  return AdjacencyList;
 }
+
 /**
  * @brief     Calculates the size of a specific node in the ONNX graph in kilobytes (KB).
  *
@@ -156,113 +172,6 @@ float calculate_node_size(const onnx::GraphProto &g, int node_index) // unit : K
     }
   }
   return float(node_size * 1.0 / 1024.0);
-}
-/**
- * @brief     Depth-First Search (DFS) to build a NPU subgraph.
- *
- * @param     [in] onnx_graph Input ONNX graph structure.
- * @param     [out] onnx_subgraph Output subgraph.
- * @param     [in,out] subgraph_node_indices Vector storing indices of nodes in the subgraph.
- * @param     [in,out] visited Array recording whether nodes have been visited.
- * @param     [in] start_node Current starting node for the search.
- * @param     [in] current_node_index Index of the current node.
- * @param     [in] adjacency_list Adjacency list representing connections between nodes in the
- * graph.
- * @param     [in] supported_op_types List of supported operation types.
- * @param     [in] preferred_op_types List of preferred operation types (not used in the code).
- * @param     [in] current_depth Current depth of the search.
- * @param     [in,out] current_graph_size Current size of the subgraph.
- * @param     [in] max_graph_size Maximum allowed size of the subgraph.
- * @pre       `current_node_index` should be a valid node index.
- * @post      If the subgraph size exceeds `max_graph_size`, a warning message is printed.
- * @exception None
- */
-void DFS(const onnx::GraphProto &g, onnx::GraphProto &subgraph,
-         std::vector<int> &sugraph_node_index, int *visited, const onnx::NodeProto &start_node,
-         int node_index, std::vector<GraphAdjacencyNode> &adjacency_list,
-         const std::vector<std::string> &support_op, const std::vector<std::string> &prefer_op,
-         int depth_in, float &graph_size, float max_graph_size)
-{
-  int depth_out = depth_in + 1;
-  *subgraph.add_node() = start_node;
-  visited[node_index] = 1;
-  sugraph_node_index.push_back(node_index);
-  float node_size = calculate_node_size(g, node_index);
-  graph_size += node_size;
-  if (graph_size > max_graph_size)
-  {
-    std::cout << "graph size exceed max size!" << graph_size << " " << max_graph_size << std::endl;
-  }
-  for (int i = 0; i < int(adjacency_list[node_index].outputNodeIndex.size()); i++)
-  {
-    if (i > 1)
-    {
-      std::cout << adjacency_list[node_index].outputNodeIndex[i] << "->";
-    }
-    //
-    int next_node_index = adjacency_list[node_index].outputNodeIndex[i];
-    const auto &next_node = g.node(next_node_index);
-    if (!visited[next_node_index] &&
-        (std::find(support_op.begin(), support_op.end(), next_node.op_type()) !=
-         support_op.end()) &&
-        (depth_out < MAX_DEPTH) && (graph_size < max_graph_size)) // 尚未访问且op_type符合的邻接顶点
-      DFS(g, subgraph, sugraph_node_index, visited, next_node, next_node_index, adjacency_list,
-          support_op, prefer_op, depth_out, graph_size, max_graph_size);
-  }
-}
-/**
- * @brief     Perform a depth-first search (DFS) to build a CPU subgraph from a given starting node.
- *
- * @param     [in] g The original ONNX graph from which the subgraph will be extracted.
- * @param     [out] subgraph The subgraph being constructed.
- * @param     [out] subgraph_node_indices A vector to store indices of nodes included in the
- * subgraph.
- * @param     [in,out] visited An array to keep track of visited nodes.
- * @param     [in] start_node The starting node for the DFS.
- * @param     [in] node_index The index of the starting node in the original graph.
- * @param     [in] adjacency_list The adjacency list representing the graph's structure.
- * @param     [in] depth_in The current depth of the DFS.
- * @param     [in,out] graph_size The cumulative size of the nodes in the subgraph.
- * @param     [in] max_graph_size The maximum allowed size for the subgraph.
- *
- * @pre       The graph `g` and `adjacency_list` should be properly initialized.
- * @pre       The `visited` array should be initialized to zero.
- * @pre       `graph_size` should be initialized to zero before the first call to this function.
- *
- * @post      The `subgraph` will contain the nodes visited during the DFS.
- * @post      The `subgraph_node_indices` will contain the indices of the nodes in the subgraph.
- * @post      The `visited` array will reflect the nodes that have been visited.
- * @post      The `graph_size` will reflect the cumulative size of the nodes in the subgraph.
- *
- * @exception None
- *
- * @return    None
- */
-void DFS_other(const onnx::GraphProto &g, onnx::GraphProto &subgraph,
-               std::vector<int> &sugraph_node_index, int *visited,
-               const onnx::NodeProto &start_node, int node_index,
-               std::vector<GraphAdjacencyNode> &adjacency_list, int depth_in, float &graph_size,
-               float max_graph_size)
-{
-  int depth_out = depth_in + 1;
-  *subgraph.add_node() = start_node;
-  visited[node_index] = 1;
-  sugraph_node_index.push_back(node_index);
-  float node_size = calculate_node_size(g, node_index);
-  graph_size += node_size;
-  if (graph_size > max_graph_size)
-  {
-    std::cout << "graph size exceed max size!" << graph_size << " " << max_graph_size << std::endl;
-  }
-  for (int i = 0; i < int(adjacency_list[node_index].outputNodeIndex.size()); i++)
-  {
-    int next_node_index = adjacency_list[node_index].outputNodeIndex[i];
-    const auto &next_node = g.node(next_node_index);
-    if (!visited[next_node_index] && (depth_out < MAX_DEPTH) &&
-        (graph_size < max_graph_size)) // do deep first search for each successor node
-      DFS_other(g, subgraph, sugraph_node_index, visited, next_node, next_node_index,
-                adjacency_list, depth_out, graph_size, max_graph_size);
-  }
 }
 
 /**
@@ -1690,7 +1599,7 @@ void PartitionGraph(const onnx::GraphProto &g, Device &d, PartitionStrategy stra
   std::unordered_set<NodeTensor> IOvalueNames = getIOvalue(g);
   std::vector<onnx::GraphProto> Subgraphs;
   int *visited = (int *)malloc(g.node_size() * sizeof(int));
-  std::vector<GraphAdjacencyNode> adjacency_list = get_adjancency_list(g, visited);
+  std::vector<GraphAdjacencyNode> adjacency_list = GetAdjancencyList(g, visited);
   std::vector<onnx::GraphProto> otherSubgraphs;
   determine_subgraphs_v2(g, otherSubgraphs, d, visited, adjacency_list, strategy, Subgraphs);
   std::cout << "Partition Done" << std::endl;
@@ -2073,7 +1982,7 @@ void PartitionGraph(const onnx::GraphProto &g, Device &d, PartitionStrategy stra
   }
   outfile_predecessor_2.close();
   outfile_successor_2.close();
-  print_subgraphs(Subgraphs, (char *)"./subgraphs_final_2.txt", otherSubgraphs,
+  PrintSubgraphs(Subgraphs, (char *)"./subgraphs_final_2.txt", otherSubgraphs,
                   (char *)"./other_subgraphs_final_2.txt");
   int *DFN_2 = (int *)malloc(graphs_inputs.size() * sizeof(int));
   int *LOW_2 = (int *)malloc(graphs_inputs.size() * sizeof(int));
@@ -2335,7 +2244,7 @@ void PartitionGraph(const onnx::GraphProto &g, Device &d, PartitionStrategy stra
   }
   outfile_predecessor_3.close();
   outfile_successor_3.close();
-  print_subgraphs(Subgraphs, (char *)"./subgraphs_final_3.txt", otherSubgraphs,
+  PrintSubgraphs(Subgraphs, (char *)"./subgraphs_final_3.txt", otherSubgraphs,
                   (char *)"./other_subgraphs_final_3.txt");
   node_num_all = 0;
   for (const auto &sg : Subgraphs)
@@ -2609,9 +2518,9 @@ void PartitionGraph(const onnx::GraphProto &g, Device &d, PartitionStrategy stra
   }
   outfile_predecessor_4.close();
   outfile_successor_4.close();
-  print_subgraphs(Subgraphs, (char *)"./subgraphs_final_4.txt", otherSubgraphs,
+  PrintSubgraphs(Subgraphs, (char *)"./subgraphs_final_4.txt", otherSubgraphs,
                   (char *)"./other_subgraphs_final_4.txt");
-  ////*
+  
   int temp_count_subgraph = 0;
 
   std::ofstream outfile_conv_flag("end_with_conv.txt");
